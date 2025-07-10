@@ -1,0 +1,46 @@
+; Preprocessing
+title                   = KEAP1kd-ligand complex NVT equilibration -- CHARMM36
+define                  = -DPOSRES 
+; Run control
+integrator              = md        ; leap-frog integrator
+nsteps                  = 50000     ; 2 x 50000 = 100 ps
+dt                      = 0.002     ; 2 fs
+; Output control
+nstxout-compressed      = 500	   ; save coordinates every 1.0 ps nstenergy               = 500       ; save energies every 1.0 ps
+nstlog                  = 500       ; update log file every 1.0 ps
+nstenergy               = 500	   ; save energies every 1.0 ps     
+; Bonds
+continuation            = no        ; first md run
+constraint_algorithm    = lincs     ; holonomic constraints 
+constraints             = h-bonds
+lincs_iter              = 1        
+lincs_order             = 4        
+; Neighbor searching
+cutoff-scheme           = Verlet
+nstlist                 = 20        
+pbc                     = xyz    
+ns_type                 = grid     
+rlist                   = 1.2
+; Van der Waals
+vdwtype                 = cutoff
+vdw-modifier            = force-switch
+rvdw                    = 1.2
+rvdw-switch             = 1.0
+DispCorr                = no
+; Electrostatics
+coulombtype             = PME
+rcoulomb                = 1.2    
+; Ewald
+pme_order               = 4        
+fourierspacing          = 0.16     
+; Temperature coupling
+tcoupl                  = V-rescale 
+tc-grps                 = Protein	UNK   Water_and_ions  
+tau_t                   = 0.1     0.1	0.1          
+ref_t                   = 300     300	300     ; reference temperature (K) for each group
+; Pressure coupling
+pcoupl                  = no     
+; Velocity generation
+gen_vel                 = yes    
+gen_temp                = 300       ; temperature for Maxwell distribution
+gen_seed                = -1      
