@@ -1,0 +1,9 @@
+Cancer,Positive Very High,Negative Very High,Positive High,Negative High,Positive Significant,Negative Significant,Insignificant,,,,,,Correlation,CESC,CHOL,GBM,HNSC,LUAD,LUSC,STAD,UCEC
+CESC,4,45,5,16,9,9,42,,,,,,Positive Very High,4,0,4,19,21,8,15,37
+CHOL,0,0,2,0,3,3,122,,,,,,Positive High,5,2,12,2,8,5,3,6
+GBM,4,0,12,2,25,3,84,,,,,,Positive Significant,9,3,25,1,9,3,5,7
+HNSC,19,58,2,8,1,6,36,,,,,,Insignificant,42,122,84,36,71,37,70,67
+LUAD,21,8,8,7,9,6,71,,,,,,Negative Significant,9,3,3,6,6,10,9,3
+LUSC,8,48,5,19,3,10,37,,,,,,Negative High,16,0,2,8,7,19,11,6
+STAD,15,17,3,11,5,9,70,,,,,,Negative Very High,45,0,0,58,8,48,17,4
+UCEC,37,4,6,6,7,3,67,,,,,,,,,,,,,,

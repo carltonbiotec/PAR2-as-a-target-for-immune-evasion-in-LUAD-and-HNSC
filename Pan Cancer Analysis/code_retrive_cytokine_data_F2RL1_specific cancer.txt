@@ -1,0 +1,116 @@
+# Load libraries
+library(dplyr)
+library(tidyr)
+library(pheatmap)
+library(RColorBrewer)
+library(tibble)
+
+# Gene of interest and ICGs
+gene <- "F2RL1"
+icgs <- c("CD274","CTLA4","HAVCR2","LAG3","PDCD1","PDCD1LG2","SIGLEC15","TIGIT")
+
+# Load expression data and metadata
+meta <- get_all_meta()
+expr <- get_all_tpm()
+cancer_types <- unique(meta$Cancer)
+
+# Significance label function
+pval_significance <- function(p) {
+  if (is.na(p)) return("")
+  else if (p < 0.001) return("***")
+  else if (p < 0.01) return("**")
+  else if (p < 0.05) return("*")
+  else return("NS")
+}
+
+# Correlation analysis loop
+results <- list()
+
+for (cancer in cancer_types) {
+  samples <- rownames(meta[meta$Cancer == cancer, ])
+  expr_cancer <- expr[samples, ]
+  
+  if (!(gene %in% colnames(expr_cancer))) next
+
+  for (icg in icgs) {
+    if (icg %in% colnames(expr_cancer)) {
+      test <- tryCatch({
+        cor.test(expr_cancer[[gene]], expr_cancer[[icg]], method = "pearson")
+      }, error = function(e) NULL)
+
+      if (!is.null(test)) {
+        results[[length(results) + 1]] <- data.frame(
+          Cancer = cancer,
+          ICG = icg,
+          Correlation_with_F2RL1 = round(test$estimate, 4),
+          P_value = signif(test$p.value, 4),
+          Significance = pval_significance(test$p.value)
+        )
+      }
+    }
+  }
+}
+
+# Combine results
+df_results <- do.call(rbind, results)
+
+# Pivot to wide format
+df_pivot <- pivot_wider(
+  df_results,
+  names_from = Cancer,
+  values_from = c(Correlation_with_F2RL1, P_value, Significance),
+  names_sep = "_"
+)
+
+# Filter selected cancer types
+cancers_of_interest <- c("CESC", "CHOL", "GBM", "HNSC", "LUAD", "LUSC", "STAD", "UCEC")
+keep_columns <- c("ICG")
+for (cancer in cancers_of_interest) {
+  keep_columns <- c(keep_columns,
+                    paste0("Correlation_with_F2RL1_", cancer),
+                    paste0("P_value_", cancer),
+                    paste0("Significance_", cancer))
+}
+
+df_filtered <- df_pivot[, colnames(df_pivot) %in% keep_columns]
+df_filtered <- df_filtered[, c("ICG", sort(setdiff(colnames(df_filtered), "ICG")))]
+
+# Save to CSV
+write.csv(df_filtered, "F2RL1_ICG_Correlation_SelectedCancers.csv", row.names = FALSE)
+
+# ---------------- Heatmap ---------------- #
+
+# Prepare correlation matrix
+heatmap_data <- df_results %>%
+  dplyr::filter(Cancer %in% cancers_of_interest) %>%
+  dplyr::select(Cancer, ICG, Correlation_with_F2RL1) %>%
+  tidyr::pivot_wider(names_from = Cancer, values_from = Correlation_with_F2RL1) %>%
+  dplyr::mutate(ICG = as.character(ICG)) %>%
+  tibble::column_to_rownames("ICG")
+
+heatmap_matrix <- as.matrix(heatmap_data)
+
+# Prepare label matrix
+label_data <- df_results %>%
+  dplyr::filter(Cancer %in% cancers_of_interest) %>%
+  dplyr::select(Cancer, ICG, Significance) %>%
+  tidyr::pivot_wider(names_from = Cancer, values_from = Significance) %>%
+  dplyr::mutate(ICG = as.character(ICG)) %>%
+  tibble::column_to_rownames("ICG")
+
+label_matrix <- as.matrix(label_data)
+
+# Plot heatmap
+pheatmap(
+  heatmap_matrix,
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  scale = "none",
+  color = colorRampPalette(rev(RColorBrewer::brewer.pal(n = 9, name = "RdBu")))(100),
+  main = "F2RL1 ~ Immune Checkpoint Genes: Pearson Correlation (Selected Cancers)",
+  display_numbers = label_matrix,
+  fontsize_row = 10,
+  fontsize_col = 10,
+  fontsize_number = 8,
+  na_col = "grey90"
+)

@@ -1,0 +1,9 @@
+Cancer,CD274,CD274_Significance,CTLA4,CTLA4_Significance,HAVCR2,HAVCR2_Significance,LAG3,LAG3_Significance,PDCD1,PDCD1_Significance,PDCD1LG2,PDCD1LG2_Significance,SIGLEC15,SIGLEC15_Significance,TIGIT,TIGIT_Significance
+CESC,Negative,**,Negative,***,Negative,***,Negative,***,Negative,***,Negative,**,Positive,NS,Negative,***
+CHOL,Negative,NS,Negative,NS,Negative,NS,Negative,NS,Negative,NS,Negative,NS,Positive,NS,Negative,NS
+GBM,Positive,**,Positive,*,Positive,NS,Negative,NS,Positive,NS,Positive,***,Positive,NS,Positive,**
+HNSC,Positive,NS,Negative,***,Negative,*,Negative,***,Negative,***,Positive,***,Negative,*,Negative,***
+LUAD,Positive,NS,Negative,**,Positive,*,Negative,***,Negative,*,Positive,NS,Positive,***,Negative,NS
+LUSC,Positive,*,Negative,***,Negative,*,Negative,***,Negative,***,Positive,NS,Negative,NS,Negative,***
+STAD,Positive,NS,Negative,**,Positive,NS,Negative,NS,Negative,*,Negative,NS,Positive,***,Negative,NS
+UCEC,Positive,***,Negative,NS,Positive,NS,Negative,**,Negative,NS,Positive,NS,Positive,***,Positive,NS
