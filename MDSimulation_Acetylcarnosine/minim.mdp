@@ -1,0 +1,20 @@
+; Run control
+integrator      = steep  
+emtol           = 1000.0 
+emstep          = 0.01   
+nsteps          = 50000  
+; Neighbor searching
+ns_type         = grid  
+pbc             = xyz   
+cutoff-scheme   = Verlet
+rlist           = 1.2
+nstlist         = 1  
+; Electrostatics
+coulombtype     = PME   
+rcoulomb        = 1.2   
+; Van der Waals
+vdwtype         = cutoff
+vdw-modifier    = force-switch
+rvdw            = 1.2   
+rvdw-switch     = 1.0
+DispCorr        = no
