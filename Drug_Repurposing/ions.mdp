@@ -1,0 +1,18 @@
+; Run control
+integrator  = steep
+emtol       = 1000.0
+emstep      = 0.01
+nsteps      = 50000
+; Neighbor searching
+pbc             = xyz   
+nstlist         = 1 
+cutoff-scheme	= Verlet
+ns_type         = grid   
+; Electrostatics
+coulombtype     = cutoff 
+rcoulomb        = 1.0
+; Bonds
+constraints = h-bonds
+rlist = 1.0
+; Van der Waals
+rvdw            = 1.0   
